@@ -1,0 +1,111 @@
+Will use preinstalled Centreon: CentrCent7.ova
+	Import machine, before importing mark change MAC, interface in Bridge mode
+	Start and login to console: it pass:Passw0rd
+
+# ip addr
+	Use that IP in browser on windows http://CentreonIP
+	You will get centreon web console.
+	logis: admin pass: teretere
+
+You need to update Centos.
+Login to console by putty login: it pass:Passw0rd, 
+$sudo su -
+-- Enter: Passw0rd
+# yum update -y
+
+And now read the documentation and discover configuration menu.
+
+Install plugin packages
+https://documentation.centreon.com/docs/centreon/en/2.8.x/installation/from_iso.html#installation-ppm
+installi k‰sureas nagios-plugins juurde
+# yum install nagios-plugins-all
+Check that snmpd daemon work on port 161
+# netstat -antp
+1.Pange Centreon masin monitooringuse, kasutades 2 template-i 
+  snmp toimimise kontrolliks kirjutage k‰sureas. 
+  Kautage j‰rgmiseid templeite: OS-Linus-SNMP, OS-Linus-SNMP-Custom, generic-active-host
+  # snmpwalk -v2c -c public 127.0.0.1
+2.Peale j‰rgmises alamosas serveri paigutamist lisage see kah monitooringusse.
+  Kautage j‰rgmiseid templeite: OS-Linus-SNMP, OS-Linus-SNMP-Custom, generic-active-host
+
+
+2.IP ja Rackide majandamine
+Importige linux \\mick\Avalik\B315\00 virtuaalmasinad\Ubu16-phpipam-racktables
+
+logige localadmin kasutajaga sisse
+-- Muutuge ruuduks, jumalaks, root kasutajaks
+$ sudo su -
+--vıi
+$ sudo -i
+# mc
+
+--Juurdep‰‰s windowse chromist: http://teieubuntuIP/phpipam
+--login: admin, pass: Passw0rd
+
+--phpMySQL juurdep‰‰s http://teieubuntuIP/phpmyadmin--
+--login:root, pass:Passw0rd
+
+chmod 444 /var/www/racktables/wwwroot/inc/secret.php
+--racktables windows brauserist: 
+--http://teieubuntuIP/racktables/wwwroot
+--user: admin, pass:Passw0rd
+# touch /var/www/racktables/index.php
+--Edit that file 
+# nano /var/www/racktables/index.php
+--and enter there
+<?php
+header('Location: /racktables/wwwroot');
+?>
+--Now you can use shorter URL
+--http://teieubuntuIP/racktables
+
+--RackTables Demo: http://demo.racktables.org
+--login: admin, pass: admin
+
+--Installi snmpd deemod ja editeeri konfigureerimis fail snmpd.conf
+--Kommenteeri v‰lja 15 rida 
+--Kommenteeri lahti 17 rida
+--Lisa 34 ritta sisu: 
+rocommunity public 172.18.0.0/16
+-- Restardi snmpd teenus
+# systemctl restart snmpd 
+
+MONITOORINGU ‹LESANNE
+Lisage ubuntu host monitooringusse ja pange monitoorima tema http teenus. See tuleks lisada hostile juurde!!
+Kontrollige ja n‰idake ıpetajale teenuse katkemist.
+H‰‰lestage teavitus. N‰idake ıpetajale oma kooli postkastis teenuse toimimise teavitusi.
+
+IPAM ‹LESANNE
+Find and install some IP management php/mysql portal on linux host under VirtualBox/Hyper-V.
+phpIPAM is preferable.
+
+Log in as administrator.
+Create 2 user as operator/localadmin with you and you neightbore name. 
+Create next IP network and hosts with commments:
+PS! k‰sureas hostide tuvastamine alamvırgus:
+	# nmap -sP 172.18.25.0/24
+    k‰sureas hosti populaarsete portide tuvastamine:
+	# nmap -P0 172.18.25.XX
+	k‰sureas hosti http porti seisu tuvastamine:
+	# nmap -P0 -p 80 172.18.14.XX
+1. 6 tpt real classrooms ip networks you know. School use  IP 172.18.YY.XX/24, where YY Classroom IP subnet number, XX-number for host in class   
+   Some tips B315-14, B307-13, A402-9, B316-17, B318-16, A308-25
+2. 16 existing IP hosts of current classroom.
+3. Scan all external IP of our school(81.20.150.0/24) and enter active IP to the IP management portal try to discover PTR names.
+
+RACKTABLES ‹LESANNE
+ Setup some thing there:
+ 1. create 1 Rack with youname
+   If possible try to use VLANs
+   PS! management VLAN=12
+   Create in the rack next items: 
+   a) 2x users for different clients with
+   b) 2x router  2U, 172.20.20.1,172.20.20.2(VLAN=12), Juniper ERX-710
+   c) 4x switch  1U, 172.20.20.10-172.20.20.13(VLAN=12), Cisco Catalist 3560 series
+   d) 1x storage 3U, 172.20.20.20 3U(VLAN=12), EMC Clarion CX300
+   e) 4x servers 1U of ESXi nodes connected to storage 172.20.30.3-6 (VLAN=10), IBM xSeries x3550 M4
+   f) 1x patchpanel 1U to Main server
+   g) UPS 3U, management IP=10.2.1.2(VLAN=12), 
+   h) konsole 1U, Aten KL1100
+   i) KVM switch 1U, D-Link DKVM-16
+   j) 2x PDU (Power distribution unit) 1U, APC AP7820

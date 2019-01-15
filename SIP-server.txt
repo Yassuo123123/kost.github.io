@@ -1,0 +1,49 @@
+SIP PBX - telephone station
+
+Setup 3 core and 4GB of RAM for FreePBX
+Install FreePBX SNG7-FPBX-64bit-1805-1.iso from \\mick\Avalik\B315\ISO-Win-Unix-Linuxi
+Login as root/xxxxxxx 
+Get IP address
+Open web panel http://FreePBX-IP
+Setup admin user.
+Login to web panel using created credential.
+Update non commercial modules in "Module Admin"
+Create first Extension of type PJSIP with number 1xx1 
+where xx is you computer number in in A308. 
+We need it to have different numeration on each PBX.
+
+For testing of extension:
+Install SIP client application under Windows Zoiper_Free_3.15_Setup.exe
+Setting->Preference create new account, select SIP
+user = 1xx1@FreePBX-IP
+Password = Get it from field "Secret" of extension 
+We not use proxy
+OK
+After creation you will see sip accouts list.
+there for now will be 1 you create and must be green if its OK
+
+Connect Smartphone to Microtik WIFI 
+On smartphone Check/Install SIP Client application, recomended CSIPSimple.
+Create there SIP account In Advanced ,mode and set 
+Caller ID: 1xx2
+Server: FreePBX-IP
+Username: 1xx2
+Proxy = FreePBX-IP:5060
+
+Connect neighbour phone to you pbx through another extension like 1XX3
+ and then try to call and speak mbetween each other.
+
+Create autoanswer and voicemail to you school account. 
+Recordig audio https://wiki.freepbx.org/pages/viewpage.action?pageId=19498328
+
+Help neighbour to create another account on you phone and after connection call to him
+
+
+____________________________________________________________
+For advanced pupil
+____________________________________________________________ 
+Connect 2 PBX-es
+https://wiki.freepbx.org/pages/viewpage.action?pageId=4161588 
+
+
+

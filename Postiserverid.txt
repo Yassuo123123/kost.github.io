@@ -1,0 +1,184 @@
+COMPLETE MAIL SERVER INSTALL
+IN BRIEF
+PS! Use anywhere for you mail server name and hostname ONLY "perenimi.tpt.edu.ee"
+NB!! Teacher will configure that names on tpt.esu.ee name server.
+Import debian9-gui.
+Setup hostname and mail system name.
+!!!Create new user with your name(name with small caps) all mails send from that user!!!
+Install postfix as in http://veeremaa.tpt.edu.ee/2017/maillabor.html
+Do not set smarthost !!!!
+Send mail from program "mutt" under created user to you school account for testing purpose.
+
+Install "dovecot 2" as in instruction http://veeremaa.tpt.edu.ee/2017/maillabor.html
+Install iceweasel or thunderbird mail client on debian.
+Install thunderbird in windows
+Install some mail client on you android or ios
+
+Setup account on each mail client for created mail user.
+Use IP address for SMTP and IMAP server.
+Use Wifi "A308" with open access to connect to you mail server.
+Send e-mail from mail client to yourname@perenimi.tpt.edu.ee through you mail server
+And get e-mail from you mail server 
+
+Show for teacher result in you mail client.
+At the end you need to send mail from you client programm connected 
+to you mailserver to vadim@veeremaavadim.tpt.edu.ee
+____________________________________________________________________________
+SMTP SERVER DETAILS
+
+SMTP - 25, 465, 587 
+MTA - mail transfer 
+POP3S - post office protocol
+IMAP - interim mail access protocol
+netstat -anp tcp
+netstat -anp udp
+apt update
+-- If repo server problem has occured
+change in /etc/apt/sources.list all
+ftp.aso.ee/debian/ to ftp.ee.debian.org/debian/
+
+-- Install mail server
+apt install postfix
+-- Remove postfix if some mistake happence
+apt remove --purge  postfix
+
+-- Install network tools
+apt install net-tools
+-- Install mail clients and tools
+apt install mutt mailtools
+
+-- In files /etc/hostname and /etc/mailname must be string
+perenimi.tpt.edu.ee
+-- If not 
+-- Edit that file to change name of server and mail server
+-- Edit that filse or
+-- try this commands:
+echo "perenimi.tpt.edu.ee" > /etc/hostname
+echo "perenimi.tpt.edu.ee" > /etc/mailname
+ 
+-- Check postfix config
+cat /etc/postfix/main.cf
+______________________
+...
+myhostname = perenimi.tpt.edu.ee
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+mydestination = $myhostname, familia, localhost.localdomain, localhost
+relayhost = 
+mynetworks = 127.0.0.0/8 172.18.0.0/16 [::ffff:127.0.0.0]/104 [::1]/128
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = all
+...
+______________________
+
+--Change name of you host in main.cf to
+myhostname = perenimi.tpt.edu.ee
+
+--reload service postfix
+# systemctl reload postfix
+-- And change to the same hostname in file /etc/hostname
+NB!!! Reboot server !!!
+
+-- Create new user in linux with your name
+# useradd -m -s /bin/bash yourname
+-- log in with this user and send mail 
+-- and try send mail with next commands to you school post
+sendmail -v nimi.perenimi@tptlive.ee
+-- or use mutt programm
+
+it@mail:~$ mutt -x
+To: nimi.perenimi@tptlive.ee
+Subject: Sinum nimi ja perenimi 
+(End message with a . on a line itself) 
+.______________________
+
+And if you got message to you schoolbox
+send message to teacher:
+
+it@mail:~$ mutt -x
+To: vadim.veeremaa@tptlive.ee
+Subject: Sinum nimi ja perenimi 
+(End message with a . on a line itself)
+
+And finaly if you got message to you schoolbox
+send message to teacher: 
+it@mail:~$ mutt -x
+To: vadim@veeremaavadim.tpt.edu.ee
+Subject: Sinum nimi ja perenimi 
+(End message with a . on a line itself)
+
+NB!!!!
+from field must be: yourname@yousurname.tpt.edu.ee
+______________________
+If errors found try to discover next files
+/var/log/mail.info
+/var/log/mail.log
+/var/log/mail.err
+_________________________________________________________________________________________
+
+IMAP SERVER DETAILS
+
+Lisaks imap confile tuleks lubada plain tekst autentimine.
+Tulem muuta failis 9 rida, trell eest ära ja asendada yes -> no 
+peaks olema nii:
+disable_plaintext_auth = no
+
+_________________________________________________________________________________________
+SOME TIPS AND TRIKS
+
+Run in other terminal window log messages to see intreactively whats hapence with mail
+#tail -f /var/log/mail.log
+Or search for problem in files mail.*
+
+On the server you need to add created user to group mail
+# usermod -G mail <username>
+ONLY If you see in log files restriction to write to /var/mail
+# chmod 777 /var/mail
+
+If need in postfix change restricted network 
+	from mynetworks = 127.0.0.1/8 
+	to mynetworks = 0.0.0.0/0 or 172.18.0.0/16
+	Restart postfix
+
+Steps on Window when setup thunderbird:	
+1. for first use wizard fill 3 fields
+	Account name: any you want
+	Email: youname@youservername
+	Password: youuserpass
+2.SMTP Server: 25 port, Security: None, Auth: None	
+3.Select IMAP when asked for
+4.Check that founded email server have correct name on both IMAP and SMTP
+5.Change Outgoing SSL to "None" and authentication method to "No authentication"
+6.Push Re-test
+7.Push Done
+8.Mark "I understand the risks."
+9.Done
+
+Steps to check mail moving
+9. Check mail and try to send some mail for youself for first
+10. Send mail to neighbour, receive mail from neighbour
+11. Send mail to to teacher, wait reply and reply to reply
+___________________________________
+		-- ONLY if you connect to you server by IP address(not server name)
+		Stop searching and push "Manual config"
+		1.Remove dots before IP of you server on Incoming and Outgoing
+		2.Change Outgoing SSL to None 
+		3.Push Re-test
+		4.Push Done
+		5.Mark "I understand the risks."
+		6.Done
+		7.In settins change email address 
+		  from: name@serverIP
+		  to: name@server_name
+____________________________________
+
+Steps on Android
+1. Check you mail server by ping servername(use command line or install some network tools program)
+2. Install some mail client like "email"
+3. Setup account for IMAP, SMTP and use youserver name for that
+4. Check mail and try to send some mail for youself for first
+5. Send mail to neighbour, receive mail from neighbour
+6. Send mail to to teacher, wait reply and reply to reply
+
